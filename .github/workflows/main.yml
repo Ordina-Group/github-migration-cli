@@ -1,0 +1,27 @@
+on:
+  push:
+    branches:
+      - main
+      - native-image
+
+jobs:
+  assemble:
+    uses: ./.github/workflows/assemble.yml
+
+  release:
+    needs: [ assemble ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: artifact
+          path: build/distributions/native
+
+      - name: Release
+        run: ./gradlew jreleaserRelease
+        env:
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
     val planService = PlanService(terminal)
     val planCommand = PlanCommand(terminal, planService)
 
-    val applyCommand = ApplyCommand(planService)
+    val applyCommand = ApplyCommand(terminal, planService)
 
     MainCommand().subcommands(planCommand, applyCommand).main(args)
 }

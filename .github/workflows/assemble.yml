@@ -30,6 +30,9 @@ jobs:
 
       - name: Assemble
         run: ./gradlew assemble
+        env:
+          GITHUB_USERNAME: 'Hayena'
+          GITHUB_TOKEN: ${{ secrets.MAVEN_TOKEN }}
 
       - name: Upload JReleaser output
         if: always()

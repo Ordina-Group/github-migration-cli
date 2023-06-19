@@ -91,7 +91,7 @@ jreleaser {
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    implementation("nl.ordina:github-kotlin-client:0.0.2")
+    implementation("nl.ordina:github-kotlin-client:0.0.2-SNAPSHOT")
     implementation("com.github.ajalt.clikt:clikt:3.5.2")
     implementation("com.github.ajalt.mordant:mordant:2.0.0-beta13")
 }
@@ -103,6 +103,10 @@ repositories {
     maven {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/Ordina-Group/github-kotlin-client")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = System.getenv("GITHUB_TOKEN")
+        }
     }
 }
 

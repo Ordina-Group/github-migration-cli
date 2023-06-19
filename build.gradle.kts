@@ -105,7 +105,7 @@ repositories {
         url = uri("https://maven.pkg.github.com/Ordina-Group/github-kotlin-client")
         credentials {
             username = System.getenv("GITHUB_ACTOR")
-            password = System.getenv("GITHUB_TOKEN")
+            password = System.getenv("MAVEN_TOKEN")
         }
     }
 }

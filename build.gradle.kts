@@ -22,7 +22,10 @@ application {
 }
 
 kotlin {
-    jvmToolchain(jdkVersion)
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(jdkVersion))
+        vendor.set(GRAAL_VM)
+    }
 }
 
 graalvmNative {

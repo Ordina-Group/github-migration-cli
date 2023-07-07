@@ -27,14 +27,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Debug step
-        run: |
-          echo "GRAALVM_HOME: $GRAALVM_HOME"
-          echo "JAVA_HOME: $JAVA_HOME"
-          java --version
-          native-image --version
-          ./gradlew -q javaToolchains
-
       - name: Assemble
         run: ./gradlew assemble
         env:

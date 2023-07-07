@@ -1,4 +1,5 @@
-import org.gradle.jvm.toolchain.JvmVendorSpec.GRAAL_VM
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem
+import org.gradle.nativeplatform.platform.internal.DefaultOperatingSystem
 import org.jreleaser.model.Distribution.DistributionType
 import java.nio.file.Paths
 
@@ -16,16 +17,23 @@ group = "nl.ordina"
 version = "0.1-RC1"
 
 val jdkVersion = 17
+val currentOperatingSystem: DefaultOperatingSystem = getCurrentOperatingSystem()
+val currentOperatingSystemName: String = when {
+    currentOperatingSystem.isWindows -> "windows"
+    currentOperatingSystem.isLinux -> "linux"
+    currentOperatingSystem.isMacOsX -> "osx"
+    else -> "unknown"
+}
 
 application {
     mainClass.set("nl.ordina.migration.MainKt")
 }
 
-kotlin {
+        kotlin {
     jvmToolchain(jdkVersion)
 }
 
-graalvmNative {
+        graalvmNative {
     binaries {
         named("main") {
             imageName.set("github-migration-cli")
@@ -45,7 +53,7 @@ graalvmNative {
     }
 }
 
-jreleaser {
+        jreleaser {
     configurations {
         create("osx-aarch_64")
     }
@@ -80,7 +88,7 @@ jreleaser {
                 distributionType.set(DistributionType.BINARY)
 
                 artifact {
-                    path.set(Paths.get("$buildDir/distributions/github-migration-cli-native-$version.zip").toFile())
+                    path.set(Paths.get("$buildDir/distributions/github-migration-cli-native-$version-$currentOperatingSystemName.zip").toFile())
                     platform.set("osx-x86_64")
                 }
             }
@@ -88,14 +96,14 @@ jreleaser {
     }
 }
 
-dependencies {
+        dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("nl.ordina:github-kotlin-client:0.0.2")
     implementation("com.github.ajalt.clikt:clikt:4.2.0")
     implementation("com.github.ajalt.mordant:mordant:2.0.0-beta13")
 }
 
-repositories {
+        repositories {
     mavenCentral()
     mavenLocal()
 
@@ -109,14 +117,15 @@ repositories {
     }
 }
 
-tasks.register<Zip>("package") {
+        tasks.register<Zip>("package") {
     dependsOn(tasks.nativeCompile)
 
-    archiveFileName.set("native/github-migration-cli-native-${archiveVersion.get()}.zip")
+    archiveFileName.set("native/github-migration-cli-native-${archiveVersion.get()}-$currentOperatingSystemName.zip")
 
     from(layout.buildDirectory.dir("native/nativeCompile"))
 }
 
-tasks.named("assemble") {
+        tasks.named("assemble") {
     dependsOn(tasks.named("package"))
 }
+

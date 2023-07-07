@@ -20,9 +20,8 @@ jobs:
       - name: Setup Graal
         uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
           java-version: '17'
-          components: 'native-image'
+          distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Gradle

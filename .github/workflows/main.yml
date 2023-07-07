@@ -7,6 +7,7 @@ on:
 jobs:
   assemble:
     uses: ./.github/workflows/assemble.yml
+    secrets: inherit
 
   release:
     needs: [ assemble ]

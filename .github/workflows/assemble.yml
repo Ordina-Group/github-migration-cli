@@ -33,6 +33,7 @@ jobs:
           echo "JAVA_HOME: $JAVA_HOME"
           java --version
           native-image --version
+          ./gradlew -q javaToolchains
 
       - name: Assemble
         run: ./gradlew assemble

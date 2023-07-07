@@ -6,10 +6,12 @@ on:
 
 jobs:
   assemble:
+    name: Assemble
     uses: ./.github/workflows/assemble.yml
     secrets: inherit
 
   release:
+    name: Release
     needs: [ assemble ]
     runs-on: ubuntu-latest
     steps:

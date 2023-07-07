@@ -31,8 +31,8 @@ jobs:
       - name: Assemble
         run: ./gradlew assemble
         env:
-          GITHUB_USERNAME: 'Hayena'
-          GITHUB_TOKEN: ${{ secrets.MAVEN_TOKEN }}
+          GITHUB_USERNAME: ${{ vars.GH_PAT_USERNAME }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
 
       - name: Upload JReleaser output
         if: always()

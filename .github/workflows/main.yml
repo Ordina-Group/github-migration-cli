@@ -22,7 +22,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: artifact
-          path: build/distributions/native
+          path: build/distributions
 
       - name: Release
         run: ./gradlew jreleaserRelease

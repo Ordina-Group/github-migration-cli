@@ -3,10 +3,10 @@ import java.nio.file.Paths
 
 plugins {
     kotlin("jvm") version "1.8.20"
-    kotlin("plugin.serialization") version "1.8.20"
-    id("io.gitlab.arturbosch.detekt") version "1.23.0"
+    kotlin("plugin.serialization") version "1.9.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.1"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
-    id("org.jreleaser") version "1.6.0"
+    id("org.jreleaser") version "1.7.0"
     application
 }
 
@@ -60,7 +60,7 @@ jreleaser {
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("nl.ordina:github-kotlin-client:0.0.2-SNAPSHOT")
-    implementation("com.github.ajalt.clikt:clikt:3.5.2")
+    implementation("com.github.ajalt.clikt:clikt:4.2.0")
     implementation("com.github.ajalt.mordant:mordant:2.0.0-beta13")
 }
 

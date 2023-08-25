@@ -102,8 +102,12 @@ class Plan private constructor(
             .map { "  ${"+".green} Member ${it.bold} will be added to team ${team.name.bold}" }
             .forEach(builder::appendLine)
 
+        if(team.members.isNotEmpty()) {
+            builder.appendLine()
+        }
+
         team.memberships
-            .map { " ${"+".green} Team ${team.name.bold} will be added to repository ${it.repositoryName.bold} with permissions ${it.permission.bold.yellow}" }
+            .map { "  ${"+".green} Team ${team.name.bold} will be added to repository ${it.repositoryName.bold} with permissions ${it.permission.bold.yellow}" }
             .forEach(builder::appendLine)
 
         return builder.toString()

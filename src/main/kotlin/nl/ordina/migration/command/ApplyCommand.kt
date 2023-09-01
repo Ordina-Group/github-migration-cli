@@ -2,6 +2,7 @@ package nl.ordina.migration.command
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.multiple
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.enum
@@ -36,8 +37,13 @@ class ApplyCommand(private val terminal: Terminal, private val planService: Plan
         help = "Strategy to use when a resource already exists on the destination organization"
     ).enum<Strategy>().default(Strategy.Merge)
 
+    private val blacklist by option(
+        "--blacklist",
+        help = "Name of the repository that you do not want to migrate, can be defined multiple times."
+    ).multiple()
+
     override fun run() {
-        val options = PlanOptions(token, source, destination, strategy, null)
+        val options = PlanOptions(token, source, destination, strategy, null, blacklist)
         val plan = planService.generatePlan(options)
 
         terminal.println(plan)

@@ -1,11 +1,13 @@
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem
 import org.gradle.nativeplatform.platform.internal.DefaultOperatingSystem
+import org.jreleaser.model.Active
 import org.jreleaser.model.Distribution.DistributionType
+import org.jreleaser.model.Stereotype
 import java.nio.file.Paths
 
 plugins {
-    kotlin("jvm") version "1.9.0"
-    kotlin("plugin.serialization") version "1.9.0"
+    kotlin("jvm") version "1.9.10"
+    kotlin("plugin.serialization") version "1.9.10"
     id("io.gitlab.arturbosch.detekt") version "1.23.1"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
     id("org.graalvm.buildtools.native") version "0.9.21"
@@ -14,7 +16,7 @@ plugins {
 }
 
 group = "nl.ordina"
-version = "0.1-RC1"
+version = "0.1-RC2"
 
 val jdkVersion = 17
 val currentOperatingSystem: DefaultOperatingSystem = getCurrentOperatingSystem()
@@ -58,6 +60,7 @@ jreleaser {
         create("osx-aarch_64")
     }
 
+
     project {
         description.set("CLI to migrate all repositories, teams and members from one organization to another")
         copyright.set("2023 Ordina NV")
@@ -80,30 +83,13 @@ jreleaser {
             }
         }
     }
-
-    packagers {
-        distributions {
-            create("osx-aarch_64") {
-                executable.name.set("github-migration-cli")
-                distributionType.set(DistributionType.BINARY)
-
-                artifact {
-                    path.set(
-                        Paths.get("$buildDir/distributions/github-migration-cli-native-$version-$currentOperatingSystemName.zip")
-                            .toFile()
-                    )
-                    platform.set("osx-x86_64")
-                }
-            }
-        }
-    }
 }
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("nl.ordina:github-kotlin-client:0.0.2")
     implementation("com.github.ajalt.clikt:clikt:4.2.0")
-    implementation("com.github.ajalt.mordant:mordant:2.0.0-beta13")
+    implementation("com.github.ajalt.mordant:mordant:2.1.0")
 }
 
 repositories {
@@ -123,12 +109,9 @@ repositories {
 tasks.register<Zip>("package") {
     dependsOn(tasks.nativeCompile)
 
-    archiveFileName.set("native/github-migration-cli-native-${archiveVersion.get()}-$currentOperatingSystemName.zip")
-
     from(layout.buildDirectory.dir("native/nativeCompile"))
 }
 
 tasks.named("assemble") {
     dependsOn(tasks.named("package"))
 }
-

@@ -7,7 +7,6 @@ import nl.ordina.migration.command.MainCommand
 import nl.ordina.migration.command.PlanCommand
 import nl.ordina.migration.service.PlanService
 
-@Suppress("OPT_IN_USAGE_FUTURE_ERROR")
 fun main(args: Array<String>) {
     val terminal = Terminal()
 

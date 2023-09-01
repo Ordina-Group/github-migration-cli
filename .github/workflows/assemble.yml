@@ -1,0 +1,50 @@
+on:
+  workflow_call:
+
+
+jobs:
+  assemble:
+    name: 'Assemble ${{ matrix.os }}'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: native-image
+          fetch-depth: 0
+
+      - name: Setup Graal
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Assemble
+        run: ./gradlew assemble
+        env:
+          GITHUB_USERNAME: ${{ vars.GH_PAT_USERNAME }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
+
+      - name: Upload JReleaser output
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: jreleaser-release
+          path: |
+            build/jreleaser/trace.log
+            build/jreleaser/output.properties
+
+      - name: Upload native images
+        uses: actions/upload-artifact@v3
+        with:
+          retention-days: 1
+          path: |
+            build/distributions/native/*.zip

@@ -5,13 +5,14 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.enum
+import com.github.ajalt.mordant.terminal.Terminal
 import nl.ordina.github.organization.GitHubOrganization
 import nl.ordina.migration.domain.Team
 import nl.ordina.migration.service.PlanOptions
 import nl.ordina.migration.service.PlanService
 import nl.ordina.migration.service.Strategy
 
-class ApplyCommand(private val planService: PlanService) : CliktCommand() {
+class ApplyCommand(private val terminal: Terminal, private val planService: PlanService) : CliktCommand() {
     private val token by option(
         "--token",
         "-t",
@@ -38,6 +39,15 @@ class ApplyCommand(private val planService: PlanService) : CliktCommand() {
     override fun run() {
         val options = PlanOptions(token, source, destination, strategy, null)
         val plan = planService.generatePlan(options)
+
+        terminal.println(plan)
+
+        val response = terminal.prompt("Do you wish to apply these changes", choices = listOf("yes", "no"))
+
+        if (response == null || response.lowercase() != "yes") {
+            terminal.warning("Migration has been cancelled")
+            return
+        }
 
         plan.repositories.map { repository -> repository.transfer(destination) }
         plan.members.map { member -> plan.destinationOrganization.invite(member.id) }

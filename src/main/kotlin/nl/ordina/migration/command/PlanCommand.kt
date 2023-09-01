@@ -2,6 +2,7 @@ package nl.ordina.migration.command
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.multiple
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.enum
@@ -36,6 +37,11 @@ class PlanCommand(private val terminal: Terminal, private val planService: PlanS
 
     private val output by option("--output", "-o")
 
+    private val blacklist by option(
+        "--blacklist",
+        help = "Name of the repository that you do not want to migrate, can be defined multiple times."
+    ).multiple()
+
     /**
      * Steps:
      * 1) Get repositories, teams and members for the source organisation
@@ -48,7 +54,9 @@ class PlanCommand(private val terminal: Terminal, private val planService: PlanS
      */
 
     override fun run() {
-        val options = PlanOptions(token, source, destination, strategy, output)
+        println(blacklist)
+
+        val options = PlanOptions(token, source, destination, strategy, output, blacklist)
         val plan = planService.generatePlan(options)
 
         terminal.println(plan)

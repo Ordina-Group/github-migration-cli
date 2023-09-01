@@ -102,7 +102,7 @@ class Plan private constructor(
             .map { "  ${"+".green} Member ${it.bold} will be added to team ${team.name.bold}" }
             .forEach(builder::appendLine)
 
-        if(team.members.isNotEmpty()) {
+        if (team.members.isNotEmpty()) {
             builder.appendLine()
         }
 

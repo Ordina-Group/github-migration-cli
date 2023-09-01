@@ -15,7 +15,8 @@ data class PlanOptions(
     val source: String,
     val destination: String,
     val strategy: Strategy,
-    val output: String?
+    val output: String?,
+    val blacklist: List<String>
 )
 
 enum class Strategy {
@@ -37,7 +38,7 @@ class PlanService(private val terminal: Terminal) {
             "Refreshing state for source organization $source and destination organization $destination"
         )
 
-        val repositories = getRepositories(sourceOrganization)
+        val repositories = getRepositories(sourceOrganization).filterNot { options.blacklist.contains(it.name) }
         val teams = getTeams(sourceOrganization)
 
         val members = sourceOrganization.getMembers()

@@ -13,9 +13,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: native-image
-          fetch-depth: 0
 
       - name: Setup Graal
         uses: graalvm/setup-graalvm@v1

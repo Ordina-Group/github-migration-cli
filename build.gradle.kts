@@ -89,7 +89,7 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("nl.ordina:github-kotlin-client:0.0.2")
     implementation("com.github.ajalt.clikt:clikt:4.2.0")
-    implementation("com.github.ajalt.mordant:mordant:2.1.0")
+    implementation("com.github.ajalt.mordant:mordant:2.2.0")
 }
 
 repositories {

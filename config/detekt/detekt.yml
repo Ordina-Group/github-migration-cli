@@ -1,0 +1,24 @@
+# Detekt handles code quality, complexity and potential bugs.
+# KtLint (via .editorconfig) is the single source of truth for formatting.
+# Formatting rules that overlap with KtLint are disabled here to avoid conflicts.
+
+style:
+  # Formatting — owned by KtLint / .editorconfig
+  MaxLineLength:
+    active: false
+  NewLineAtEndOfFile:
+    active: false
+  TrailingWhitespace:
+    active: false
+  WildcardImport:
+    active: false
+
+complexity:
+  # Code quality — owned by Detekt; keep active
+  LongParameterList:
+    active: true
+    functionThreshold: 6
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: true

@@ -18,7 +18,8 @@ import com.soprasteria.migration.domain.createPlan
 import kotlinx.coroutines.runBlocking
 
 data class PlanOptions(
-    val token: String,
+    val sourceToken: String,
+    val targetToken: String,
     val source: String,
     val destination: String,
     val strategy: Strategy,
@@ -37,16 +38,17 @@ class PlanService(
 ) {
     fun generatePlan(options: PlanOptions): Either<MigrationError, Plan> =
         either {
-            val client = GitHubClient.create(options.token)
+            val sourceClient = GitHubClient.create(options.sourceToken)
+            val targetClient = GitHubClient.create(options.targetToken)
 
             val sourceOrganization =
                 ensureNotNull(
-                    runBlocking { client.organizations.get(options.source).getOrNull() },
+                    runBlocking { sourceClient.organizations.get(options.source).getOrNull() },
                 ) { MigrationError.OrganizationNotFound(options.source) }
 
             val destinationOrganization =
                 ensureNotNull(
-                    runBlocking { client.organizations.get(options.destination).getOrNull() },
+                    runBlocking { targetClient.organizations.get(options.destination).getOrNull() },
                 ) { MigrationError.OrganizationNotFound(options.destination) }
 
             terminal.info(
@@ -55,30 +57,30 @@ class PlanService(
             )
 
             val repositories =
-                getRepositories(client, sourceOrganization)
+                getRepositories(sourceClient, sourceOrganization)
                     .filterNot { it.name in options.blacklist }
-            val teams = getTeams(client, sourceOrganization, options.blacklist)
+            val teams = getTeams(sourceClient, sourceOrganization, options.blacklist)
             val members =
-                runBlocking { client.organizations.getMembers(sourceOrganization).getOrNull() }
+                runBlocking { sourceClient.organizations.getMembers(sourceOrganization).getOrNull() }
                     .orEmpty()
                     .map { Member(it.id, it.login) }
 
             val parentTeam =
                 options.parentTeamName?.let { slug ->
-                    runBlocking { client.organizations.getTeam(destinationOrganization, slug).getOrNull() }
+                    runBlocking { targetClient.organizations.getTeam(destinationOrganization, slug).getOrNull() }
                 }
 
             val existingMembers =
                 runBlocking {
-                    client.organizations.getMembers(destinationOrganization).getOrNull()
+                    targetClient.organizations.getMembers(destinationOrganization).getOrNull()
                 }.orEmpty()
             val existingRepositories =
                 runBlocking {
-                    client.organizations.getRepositories(destinationOrganization).getOrNull()
+                    targetClient.organizations.getRepositories(destinationOrganization).getOrNull()
                 }.orEmpty()
             val existingTeams =
                 runBlocking {
-                    client.organizations.getTeams(destinationOrganization).getOrNull()
+                    targetClient.organizations.getTeams(destinationOrganization).getOrNull()
                 }.orEmpty()
 
             createPlan(

@@ -30,7 +30,7 @@ class ApplyCommand(
                     return
                 }
 
-                applyService.apply(plan, migrationOptions.token)
+                applyService.apply(plan, migrationOptions.effectiveSourceToken(), migrationOptions.effectiveTargetToken())
             }
     }
 }

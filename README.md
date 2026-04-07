@@ -31,6 +31,8 @@ A GitHub **Personal Access Token** (classic) with the following scopes is requir
 - `repo` — read/transfer repositories
 - `admin:org` — read/write organization members and teams
 
+When migrating to an organisation that uses **Enterprise Managed Users (EMU)** or other provisioned accounts, a single token may not have access to both organisations. In that case provide separate tokens with `--source-token` and `--target-token` instead of `--token`.
+
 ---
 
 ## Installation
@@ -82,12 +84,16 @@ All commands share a common set of options:
 
 | Option | Short | Required | Description |
 |---|---|---|---|
-| `--token` | `-t` | ✅ | GitHub Personal Access Token |
+| `--token` | `-t` | ✅ * | GitHub Personal Access Token for both organisations |
+| `--source-token` | | ✅ * | Token for the source organisation (use instead of `--token` when tokens differ) |
+| `--target-token` | | ✅ * | Token for the target organisation (use instead of `--token` when tokens differ) |
 | `--source` | `-s` | ✅ | Source organisation login |
 | `--destination` | `-d` | ✅ | Destination organisation login |
 | `--strategy` | | | Conflict strategy: `Merge` (default) or `Prefix` |
 | `--blacklist` | | | Repository name to exclude (repeatable) |
 | `--parent-team` | | | Slug of an existing team in the destination to nest all migrated teams under |
+
+\* Provide either `--token` **or** both `--source-token` and `--target-token`.
 
 ### `plan` — preview the migration
 

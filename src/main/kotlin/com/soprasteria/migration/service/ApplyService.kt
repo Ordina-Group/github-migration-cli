@@ -18,13 +18,15 @@ class ApplyService(
 ) {
     fun apply(
         plan: Plan,
-        token: String,
+        sourceToken: String,
+        targetToken: String,
     ) {
-        val client = GitHubClient.create(token)
+        val sourceClient = GitHubClient.create(sourceToken)
+        val targetClient = GitHubClient.create(targetToken)
         val errors =
-            transferRepositories(plan, client) +
-                inviteMembers(plan, client) +
-                migrateTeams(plan, client)
+            transferRepositories(plan, sourceClient) +
+                inviteMembers(plan, targetClient) +
+                migrateTeams(plan, targetClient)
 
         errors.forEach { terminal.danger(it.message) }
 

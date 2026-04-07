@@ -1,4 +1,4 @@
-package nl.ordina.migration.utility
+package com.soprasteria.migration.utility
 
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles

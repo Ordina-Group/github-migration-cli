@@ -1,6 +1,6 @@
-package nl.ordina.migration.domain
+package com.soprasteria.migration.domain
 
-import nl.ordina.github.team.GitHubTeam
+import com.soprasteria.github.team.GitHubTeam
 
 data class Team(
     val sourceId: Int,
@@ -10,7 +10,7 @@ data class Team(
     val slug: String,
     val privacy: String? = null,
     val memberships: List<Membership>,
-    val members: List<String>
+    val members: List<String>,
 ) {
     constructor(team: GitHubTeam, members: List<String>, memberships: List<Membership>) : this(
         sourceId = team.id,
@@ -19,8 +19,11 @@ data class Team(
         slug = team.slug,
         privacy = team.privacy,
         members = members,
-        memberships = memberships
+        memberships = memberships,
     )
 }
 
-data class Membership(val repositoryName: String, val permission: String)
+data class Membership(
+    val repositoryName: String,
+    val permission: String,
+)

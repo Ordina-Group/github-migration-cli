@@ -7,6 +7,8 @@ on:
 jobs:
   pull-request:
     name: Check Pull Request
+    permissions:
+      packages: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,3 +26,6 @@ jobs:
 
       - name: Check
         run: ./gradlew check
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

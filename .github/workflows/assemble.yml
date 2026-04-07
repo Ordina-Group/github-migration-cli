@@ -4,11 +4,15 @@ on:
 
 jobs:
   assemble:
-    name: 'Assemble'
-    runs-on: ubuntu-latest
+    name: 'Assemble ${{ matrix.os }}'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Setup Graal
         uses: graalvm/setup-graalvm@v1
@@ -18,7 +22,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
 
       - name: Assemble
         run: ./gradlew assemble
@@ -27,8 +31,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
 
       - name: Upload native images
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           retention-days: 1
           path: |
-            build/distributions/*.zip
+            build/distributions/native/*.zip

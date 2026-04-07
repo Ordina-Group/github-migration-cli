@@ -12,6 +12,9 @@ jobs:
   release:
     name: Release
     needs: [ assemble ]
+    permissions:
+      packages: read
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,15 +23,16 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: artifact
+          pattern: github-migration-*
+          merge-multiple: true
           path: build/distributions
 
       - name: Release
         run: ./gradlew jreleaserRelease
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_USERNAME: ${{ vars.GH_PAT_USERNAME }}
-          GITHUB_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload JReleaser output
         if: always()

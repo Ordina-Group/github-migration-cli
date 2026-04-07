@@ -166,7 +166,21 @@ github-migration apply \
 
 ## Development
 
-### Run tests
+### Commit messages
+
+This project follows [Conventional Commits](https://www.conventionalcommits.org/). JReleaser uses the commit history to auto-generate a grouped changelog on each release.
+
+| Prefix | When to use |
+|--------|-------------|
+| `feat:` | New user-facing feature (triggers a **minor** version bump) |
+| `fix:` | Bug fix (triggers a **patch** version bump) |
+| `chore:` | Build, tooling, or dependency changes |
+| `ci:` | CI/CD pipeline changes |
+| `test:` | Adding or updating tests |
+| `docs:` | Documentation only |
+| `feat!:` / `fix!:` | Breaking change (triggers a **major** version bump) |
+
+
 
 ```bash
 ./gradlew test

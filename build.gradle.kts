@@ -1,6 +1,7 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem
 import org.gradle.nativeplatform.platform.internal.DefaultOperatingSystem
+import org.jreleaser.model.Active
 import org.jreleaser.model.Distribution.DistributionType
 import java.nio.file.Paths
 
@@ -88,6 +89,14 @@ jreleaser {
 
             prerelease {
                 pattern.set(".*-RC\\d*")
+            }
+
+            changelog {
+                formatted.set(Active.ALWAYS)
+                preset.set("conventional-commits")
+                contributors {
+                    enabled.set(false)
+                }
             }
         }
     }

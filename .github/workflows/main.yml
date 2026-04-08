@@ -15,6 +15,7 @@ jobs:
     permissions:
       packages: read
       contents: write
+      actions: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,6 +27,8 @@ jobs:
           pattern: github-migration-*
           merge-multiple: true
           path: build/distributions
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.run_id }}
 
       - name: Release
         run: ./gradlew jreleaserRelease

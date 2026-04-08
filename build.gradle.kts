@@ -56,15 +56,20 @@ graalvmNative {
 }
 
 jreleaser {
-    configurations {
-        create("osx-aarch_64")
-    }
-
     distributions {
         create("github-migration") {
             distributionType.set(DistributionType.BINARY)
             artifact {
-                path.set(Paths.get("build/distributions/{{distributionName}}-{{projectVersion}}.zip").toFile())
+                path.set(Paths.get("build/distributions/{{distributionName}}-{{projectVersion}}-linux.zip").toFile())
+                platform.set("linux-x86_64")
+            }
+            artifact {
+                path.set(Paths.get("build/distributions/{{distributionName}}-{{projectVersion}}-osx.zip").toFile())
+                platform.set("osx-aarch_64")
+            }
+            artifact {
+                path.set(Paths.get("build/distributions/{{distributionName}}-{{projectVersion}}-windows.zip").toFile())
+                platform.set("windows-x86_64")
             }
         }
     }

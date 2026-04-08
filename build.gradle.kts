@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "com.soprasteria"
-version = "0.1-RC2"
+version = "0.1-RC3"
 
 val jdkVersion = 21
 val currentOperatingSystem: DefaultOperatingSystem = getCurrentOperatingSystem()

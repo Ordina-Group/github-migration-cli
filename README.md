@@ -89,7 +89,7 @@ All commands share a common set of options:
 | `--target-token` | | ✅ * | Token for the target organisation (use instead of `--token` when tokens differ) |
 | `--source` | `-s` | ✅ | Source organisation login |
 | `--destination` | `-d` | ✅ | Destination organisation login |
-| `--strategy` | | | Conflict strategy: `Merge` (default) or `Prefix` |
+| `--strategy` | | | Conflict strategy for **teams**: `Merge` (default) or `Prefix` |
 | `--blacklist` | | | Repository name to exclude (repeatable) |
 | `--parent-team` | | | Slug of an existing team in the destination to nest all migrated teams under |
 
@@ -139,12 +139,14 @@ Type `yes` to proceed; anything else cancels the migration safely.
 
 ## Conflict resolution strategies
 
-When a resource (team or repository) with the same name already exists in the destination organisation, the `--strategy` option controls what happens:
+When a **team** with the same name already exists in the destination organisation, the `--strategy` option controls what happens:
 
 | Strategy | Behaviour |
 |---|---|
-| `Merge` (default) | Reuses the existing resource — new members/repos are added to the existing team; a repository keeps its original name |
-| `Prefix` | Creates a new resource prefixed with the source org login, e.g. `source-org-my-repo` |
+| `Merge` (default) | Reuses the existing team — new members and repository permissions are added to it |
+| `Prefix` | Creates a new team prefixed with the source org login, e.g. `source-org-backend` |
+
+> **Note:** `--strategy` applies to teams only. When a repository with the same name already exists in the destination, it is always transferred under a prefixed name (e.g. `source-org-my-repo`). The plan output will make this explicit.
 
 ---
 

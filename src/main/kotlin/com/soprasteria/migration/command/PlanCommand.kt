@@ -6,6 +6,7 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.mordant.terminal.Terminal
 import com.soprasteria.migration.domain.PlanRenderer
 import com.soprasteria.migration.service.PlanService
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.io.IOException
 
@@ -33,23 +34,30 @@ class PlanCommand(
      */
 
     override fun run() {
-        planService
-            .generatePlan(migrationOptions.toPlanOptions(output))
-            .onLeft {
-                terminal.danger(it.message)
-                return
-            }.onRight { plan ->
-                val planText = PlanRenderer().render(plan)
-                terminal.println(planText)
+        runBlocking {
+            planService
+                .generatePlan(migrationOptions.toPlanOptions(output))
+                .onLeft {
+                    terminal.danger(it.message)
+                    return@runBlocking
+                }.onRight { plan ->
+                    if (plan.repositories.isEmpty() && plan.members.isEmpty() && plan.teams.isEmpty()) {
+                        terminal.warning("Nothing to migrate — all resources are already present in the destination or excluded by the blacklist")
+                        return@runBlocking
+                    }
 
-                output?.let { path ->
-                    try {
-                        File(path).writeText(planText)
-                        terminal.success("Plan written to $path")
-                    } catch (e: IOException) {
-                        terminal.danger("Failed to write plan to $path: ${e.message}")
+                    val planText = PlanRenderer().render(plan)
+                    terminal.println(planText)
+
+                    output?.let { path ->
+                        try {
+                            File(path).writeText(planText)
+                            terminal.success("Plan written to $path")
+                        } catch (e: IOException) {
+                            terminal.danger("Failed to write plan to $path: ${e.message}")
+                        }
                     }
                 }
-            }
+        }
     }
 }

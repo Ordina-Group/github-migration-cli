@@ -6,6 +6,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.soprasteria.migration.domain.PlanRenderer
 import com.soprasteria.migration.service.ApplyService
 import com.soprasteria.migration.service.PlanService
+import kotlinx.coroutines.runBlocking
 
 class ApplyCommand(
     private val terminal: Terminal,
@@ -15,22 +16,29 @@ class ApplyCommand(
     private val migrationOptions by MigrationOptions()
 
     override fun run() {
-        planService
-            .generatePlan(migrationOptions.toPlanOptions())
-            .onLeft {
-                terminal.danger(it.message)
-                return
-            }.onRight { plan ->
-                terminal.println(PlanRenderer().render(plan))
+        runBlocking {
+            planService
+                .generatePlan(migrationOptions.toPlanOptions())
+                .onLeft {
+                    terminal.danger(it.message)
+                    return@runBlocking
+                }.onRight { plan ->
+                    if (plan.repositories.isEmpty() && plan.members.isEmpty() && plan.teams.isEmpty()) {
+                        terminal.warning("Nothing to migrate — all resources are already present in the destination or excluded by the blacklist")
+                        return@runBlocking
+                    }
 
-                val response = terminal.prompt("Do you wish to apply these changes", choices = listOf("yes", "no"))
+                    terminal.println(PlanRenderer().render(plan))
 
-                if (response == null || response.lowercase() != "yes") {
-                    terminal.println("Migration has been cancelled")
-                    return
+                    val response = terminal.prompt("Do you wish to apply these changes", choices = listOf("yes", "no"))
+
+                    if (response == null || response.lowercase() != "yes") {
+                        terminal.println("Migration has been cancelled")
+                        return@runBlocking
+                    }
+
+                    applyService.apply(plan, migrationOptions.effectiveSourceToken(), migrationOptions.effectiveTargetToken())
                 }
-
-                applyService.apply(plan, migrationOptions.effectiveSourceToken(), migrationOptions.effectiveTargetToken())
-            }
+        }
     }
 }

@@ -30,6 +30,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.run_id }}
 
+      - name: Verify artifacts
+        run: |
+          ls build/distributions/github-migration-*-linux.zip
+          ls build/distributions/github-migration-*-osx.zip
+          ls build/distributions/github-migration-*-windows.zip
+
       - name: Release
         run: ./gradlew jreleaserRelease
         env:

@@ -7,6 +7,10 @@ sealed class MigrationError(
         val name: String,
     ) : MigrationError("Organization '$name' could not be found")
 
+    data class ParentTeamNotFound(
+        val slug: String,
+    ) : MigrationError("Parent team '$slug' not found in destination organisation")
+
     data class RepositoryTransferFailed(
         val repositoryName: String,
         val cause: String,

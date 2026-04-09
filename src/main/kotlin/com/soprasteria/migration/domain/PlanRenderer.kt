@@ -37,7 +37,14 @@ class PlanRenderer {
 
     private fun renderRepository(repository: Repository): String =
         buildString {
-            appendLine("# ${repository.name} will be ${"transferred".yellow}")
+            if (repository.originalName != repository.name) {
+                appendLine(
+                    "# ${repository.originalName} already exists in destination — " +
+                        "will be transferred as ${"${repository.name}".yellow}",
+                )
+            } else {
+                appendLine("# ${repository.name} will be ${"transferred".yellow}")
+            }
             repository.collaborators
                 .map(::renderRepositoryCollaborator)
                 .forEach { appendLine("  $it") }

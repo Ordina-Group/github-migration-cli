@@ -115,7 +115,7 @@ dependencies {
     implementation("io.arrow-kt:arrow-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 
-    testImplementation(platform("io.kotest:kotest-bom:5.8.0"))
+    testImplementation(platform("io.kotest:kotest-bom:6.1.11"))
     testImplementation("io.kotest:kotest-runner-junit5")
     testImplementation("io.kotest:kotest-assertions-core")
     testImplementation("io.kotest:kotest-property")

@@ -113,7 +113,7 @@ dependencies {
     implementation("com.github.ajalt.mordant:mordant:2.1.0")
     implementation(platform("io.arrow-kt:arrow-stack:1.2.1"))
     implementation("io.arrow-kt:arrow-core")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 
     testImplementation(platform("io.kotest:kotest-bom:5.8.0"))
     testImplementation("io.kotest:kotest-runner-junit5")
